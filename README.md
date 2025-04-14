@@ -16,6 +16,7 @@ Follow these steps to run the project locally:
 
 # 1. Clone the repo
 git clone https://github.com/VirendraSingh1212/ChatBot.git
+
 cd gemini_chatbot.py
 
 # 2. Create a virtual environment (optional but recommended)

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Gemini Chatbot</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                <div class="avatar">G</div>
+                <div class="message-content">
+                    Hello! I'm your Gemini AI assistant. How can I help you today?
+                </div>
+            </div>
+        </div>
+        <div class="typing-indicator" id="typing-indicator">
+            Gemini is thinking...
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function scrollToBottom() {
+                const messagesDiv = document.getElementById('chat-messages');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            function addMessage(message, isUser) {
+                const messageDiv = $('<div>').addClass('message').addClass(isUser ? 'user' : 'bot');
+                const avatar = $('<div>').addClass('avatar').text(isUser ? 'U' : 'G');
+                const content = $('<div>').addClass('message-content').text(message);
+                
+                messageDiv.append(avatar, content);
+                $('#chat-messages').append(messageDiv);
+                scrollToBottom();
+            }
+
+            function sendMessage() {
+                const messageInput = $('#message-input');
+                const message = messageInput.val().trim();
+                
+                if (message) {
+                    addMessage(message, true);
+                    messageInput.val('');
+                    $('#typing-indicator').show();
+                    
+                    $.ajax({
+                        url: '/send_message',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ message: message }),
+                        success: function(response) {
+                            $('#typing-indicator').hide();
+                            addMessage(response.response, false);
+                        },
+                        error: function() {
+                            $('#typing-indicator').hide();
+                            addMessage('Sorry, there was an error processing your message.', false);
+                        }
+                    });
+                }
+            }
+
+            $('#send-button').click(sendMessage);
+            $('#message-input').keypress(function(e) {
+                if (e.which == 13) {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

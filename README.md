@@ -28,8 +28,11 @@ pip install -r requirements.txt (Check for Version on Google Docs)
 
 # 4. Add your Google Gemini API key
 # Create a .env file and add:
+
 GEMINI_API_KEY=your_api_key_here
 
 # 5. Run the chatbot
+
 For Mac Try python3 app.py 
+
 For Windows python app.py 
